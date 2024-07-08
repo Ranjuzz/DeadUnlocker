@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Application {
 
@@ -17,7 +16,7 @@ public class Application {
         for (int i = 0; i < numberOfUsers; i++) {
             executorService.submit(() -> {
                 Operations.buyTicket((int) (Math.random() * 101));
-                Operations.returnTicket((int) (Math.random() * 11));
+                Operations.returnTicket((int) (Math.random() * 10));
             });
         }
 
@@ -27,12 +26,12 @@ public class Application {
 
 class Operations {
 
-    private final static ReentrantLock rl = new ReentrantLock();
+    private final static String path = "Files/Ticket.txt";
 
     public static void buyTicket(int need) {
         // rl.lock();
         try {
-            File f = new File("D:\\Ranjith\\Project\\Abluva\\Concurrency\\DeadUnlocker\\Files\\Ticket.txt");
+            File f = new File(path);
             try (Scanner sc = new Scanner(f)) {
                 int tickets = Integer.parseInt(sc.nextLine());
                 Scanner sc1 = new Scanner(System.in);
@@ -58,7 +57,7 @@ class Operations {
     }
 
     public synchronized void showTicket() {
-        File f = new File("D:\\Ranjith\\Project\\Abluva\\Concurrency\\DeadUnlocker\\Files\\Ticket.txt");
+        File f = new File(path);
         try (Scanner sc = new Scanner(f)) {
             int tickets = Integer.parseInt(sc.nextLine());
             System.out.println("No of available Tickets        : " + tickets);
@@ -69,8 +68,11 @@ class Operations {
 
     public static void returnTicket(int need) {
         // rl.lock();
+        if (need == 0) {
+            need = 10;
+        }
         try {
-            File f = new File("D:\\Ranjith\\Project\\Abluva\\Concurrency\\DeadUnlocker\\Files\\Ticket.txt");
+            File f = new File(path);
             try (Scanner sc = new Scanner(f)) {
                 Scanner sc1 = new Scanner(System.in);
                 int tickets = Integer.parseInt(sc.nextLine());

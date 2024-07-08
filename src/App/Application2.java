@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Application2 {
 
-    private final static String path = "D:\\Ranjith\\Project\\Abluva\\Concurrency\\DeadUnlocker\\Files\\Ticket.txt";
+    private final static String path = "Files/Ticket.txt";
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
@@ -43,8 +43,7 @@ public class Application2 {
 
 class Operationsf {
 
-    // private final static Semaphore semaphore = new Semaphore(1);
-    private final static String path = "D:\\Ranjith\\Project\\Abluva\\Concurrency\\DeadUnlocker\\Files\\Ticket.txt";
+    private final static String path = "Files/Ticket.txt";
 
     public void buyTicket() throws InterruptedException, IOException {
 

@@ -78,6 +78,7 @@ class OperationsFinal extends Thread {
         }
         System.out.println("How many tickets do you need?: ");
         int need = Integer.parseInt(sc1.next());
+
 //            Locking the file for modification!!
         semaphore.acquire();
         try (Scanner sc = new Scanner(file)) {
