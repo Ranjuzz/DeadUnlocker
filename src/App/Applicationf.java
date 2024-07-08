@@ -3,17 +3,22 @@ package App;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.*;
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
-public class Application {
+public class Applicationf {
 
     private final static String path = "D:\\Ranjith\\Project\\Abluva\\Concurrency\\DeadUnlocker\\Files\\Ticket.txt";
-    public static void main(String[] args) throws InterruptedException, IOException, RuntimeException {
 
-        Operations op = new Operations();
-        Scanner sct = new Scanner(System.in);
-        System.out.println(" ---- Ticket Booking App ---- ");
+    public static void main(String[] args) throws InterruptedException, IOException {
+
+        Thread fileWatcherThread = new Thread(new FileWatcher(Paths.get(path).getParent()));
+        fileWatcherThread.start();
+
+        Operationsf op = new Operationsf();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Ticketing App.Application");
         String ch = "";
         do {
             System.out.println("\tMenu");
@@ -22,7 +27,7 @@ public class Application {
             System.out.println("\t3. Show Ticket");
             System.out.println("\t4. Exit");
             System.out.println("Enter your choice: ");
-            ch = sct.next();
+            ch = sc.next();
             switch (ch) {
                 case "1" ->
                     op.buyTicket();
@@ -38,24 +43,57 @@ public class Application {
             }
         } while (!ch.equalsIgnoreCase("4"));
     }
+
+    static class FileWatcher implements Runnable {
+
+        private final Path path;
+
+        public FileWatcher(Path path) {
+            this.path = path;
+        }
+
+        @Override
+        public void run() {
+            try {
+                WatchService watchService = FileSystems.getDefault().newWatchService();
+                path.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+
+                while (true) {
+                    WatchKey key = watchService.take();
+                    for (WatchEvent<?> event : key.pollEvents()) {
+                        WatchEvent.Kind<?> kind = event.kind();
+                        if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+                            Path changed = (Path) event.context();
+                            if (changed.endsWith("Ticket.txt")) {
+                                Opera
+                            }
+                        }
+                    }
+                    key.reset();
+                }
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
 
-class Operations {
+class Operationsf {
 
     private final static Semaphore semaphore = new Semaphore(1);
     private final static String path = "D:\\Ranjith\\Project\\Abluva\\Concurrency\\DeadUnlocker\\Files\\Ticket.txt";
-    private final static File file = new File(path);
+
     public void buyTicket() throws InterruptedException, IOException {
 
-//        File file = new File(path);
-        try (Scanner scw = new Scanner(file)) {
+        File file = new File(path);
+        try (Scanner sc = new Scanner(file)) {
             Scanner sc1 = new Scanner(System.in);
             showTicket();
             System.out.println("How many tickets do you need?: ");
             int need = Integer.parseInt(sc1.next());
             semaphore.acquire();
-            int tickets = Integer.parseInt(scw.nextLine());
-            if (need < tickets) {
+            int tickets = Integer.parseInt(sc.nextLine());
+            if (need <= tickets) {
                 int newTicketCount = tickets - need;
                 System.out.printf("You bought %d tickets\n", need);
                 try (FileWriter fw = new FileWriter(file)) {
@@ -68,54 +106,45 @@ class Operations {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        } finally {
+            semaphore.release();
         }
     }
 
     public void returnTicket() throws IOException, InterruptedException {
 
-//        File file = new File(path);
-        try (Scanner scr = new Scanner(file)) {
+        File file = new File(path);
+        try (Scanner sc = new Scanner(file)) {
             Scanner sc1 = new Scanner(System.in);
             System.out.print("No of tickets you need to return: ");
             int need = Integer.parseInt(sc1.next());
             semaphore.acquire();
-            int tickets = Integer.parseInt(scr.nextLine());
+            int tickets = Integer.parseInt(sc.nextLine());
             int newTicketCount = tickets + need;
             try (FileWriter fw = new FileWriter(file)) {
                 fw.write(String.valueOf(newTicketCount));
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
-            finally {
-                semaphore.release();
-            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        } finally {
+            semaphore.release();
         }
-
     }
 
-    public void showTicket() throws InterruptedException {
+    public static void showTicket() throws InterruptedException, IOException {
 
-//        File file = new File(path);
-        try (Scanner sce = new Scanner(file)) {
-            int tickets = Integer.parseInt(sce.nextLine());
-            if(tickets == 0) {
-                System.out.println("No tickets available");
-            }
-            else
-                System.out.println("No of available Tickets: " + tickets);
+        File file = new File(path);
+        try (Scanner sc = new Scanner(file)) {
+            semaphore.acquire();
+            int tickets = Integer.parseInt(sc.nextLine());
+            System.out.println("No of available Tickets        : " + tickets);
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        } finally {
+            semaphore.release();
         }
     }
 
-    public static void ticket() throws InterruptedException, IOException {
-
-//        File file = new File(path);
-        try (Scanner sc = new Scanner(file)) {
-            int tickets = Integer.parseInt(sc.nextLine());
-            System.out.println("Updated Tickets: " + tickets);
-        }
-    }
 }

@@ -1,18 +1,21 @@
-## Getting Started
+Console Application for ticket booking!
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
 
-## Folder Structure
+To run the App:
 
-The workspace contains two folders by default, where:
+1) The Application code contains the App with concurrent modification problems.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+    1. Open the project in the terminal.
+    2. cd src
+    3. javac App\Application.java -> to compile the code
+    4. java App.Appliaction -> run this line in as many as terminal you need to stimulate multi users.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+2) The ApplicationFinal code contains the App with the problem solved!
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+    1. Open the project in the terminal.
+    2. cd src
+    3. javac App\ApplicationFinal.java -> to compile the code
+    4. java App.AppliactionFinal -> run this line in as many as terminal you need to stimulate multi users.
 
-## Dependency Management
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+*The ticket count is stored in a file which is in Files/Ticket.txt
