@@ -3,18 +3,13 @@ package App;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.*;
 import java.util.Scanner;
-import java.util.concurrent.Semaphore;
 
-public class Applicationf {
+public class Application2 {
 
     private final static String path = "D:\\Ranjith\\Project\\Abluva\\Concurrency\\DeadUnlocker\\Files\\Ticket.txt";
 
     public static void main(String[] args) throws InterruptedException, IOException {
-
-        Thread fileWatcherThread = new Thread(new FileWatcher(Paths.get(path).getParent()));
-        fileWatcherThread.start();
 
         Operationsf op = new Operationsf();
         Scanner sc = new Scanner(System.in);
@@ -44,43 +39,11 @@ public class Applicationf {
         } while (!ch.equalsIgnoreCase("4"));
     }
 
-    static class FileWatcher implements Runnable {
-
-        private final Path path;
-
-        public FileWatcher(Path path) {
-            this.path = path;
-        }
-
-        @Override
-        public void run() {
-            try {
-                WatchService watchService = FileSystems.getDefault().newWatchService();
-                path.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
-
-                while (true) {
-                    WatchKey key = watchService.take();
-                    for (WatchEvent<?> event : key.pollEvents()) {
-                        WatchEvent.Kind<?> kind = event.kind();
-                        if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-                            Path changed = (Path) event.context();
-                            if (changed.endsWith("Ticket.txt")) {
-                                Opera
-                            }
-                        }
-                    }
-                    key.reset();
-                }
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
 
 class Operationsf {
 
-    private final static Semaphore semaphore = new Semaphore(1);
+    // private final static Semaphore semaphore = new Semaphore(1);
     private final static String path = "D:\\Ranjith\\Project\\Abluva\\Concurrency\\DeadUnlocker\\Files\\Ticket.txt";
 
     public void buyTicket() throws InterruptedException, IOException {
@@ -91,7 +54,7 @@ class Operationsf {
             showTicket();
             System.out.println("How many tickets do you need?: ");
             int need = Integer.parseInt(sc1.next());
-            semaphore.acquire();
+            // semaphore.acquire();
             int tickets = Integer.parseInt(sc.nextLine());
             if (need <= tickets) {
                 int newTicketCount = tickets - need;
@@ -107,7 +70,7 @@ class Operationsf {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
-            semaphore.release();
+            // semaphore.release();
         }
     }
 
@@ -118,7 +81,7 @@ class Operationsf {
             Scanner sc1 = new Scanner(System.in);
             System.out.print("No of tickets you need to return: ");
             int need = Integer.parseInt(sc1.next());
-            semaphore.acquire();
+            // semaphore.acquire();
             int tickets = Integer.parseInt(sc.nextLine());
             int newTicketCount = tickets + need;
             try (FileWriter fw = new FileWriter(file)) {
@@ -129,7 +92,7 @@ class Operationsf {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
-            semaphore.release();
+            // semaphore.release();
         }
     }
 
@@ -137,13 +100,13 @@ class Operationsf {
 
         File file = new File(path);
         try (Scanner sc = new Scanner(file)) {
-            semaphore.acquire();
+            // semaphore.acquire();
             int tickets = Integer.parseInt(sc.nextLine());
             System.out.println("No of available Tickets        : " + tickets);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } finally {
-            semaphore.release();
+            // semaphore.release();
         }
     }
 
