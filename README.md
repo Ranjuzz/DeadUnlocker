@@ -1,7 +1,7 @@
-Console Application for ticket booking!
+# Console Application for ticket booking!
 
 
-To run the App:
+### To run the App:
 
 1) The Application code contains the App with concurrent modification problems.
 
